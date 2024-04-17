@@ -1,8 +1,17 @@
 import { Box, Circle, Text, VStack } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const ColorWheel = () => {
   const [selectedColor, setSelectedColor] = useState("#FFFFFF");
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      drawColorWheel(canvas, ctx, 150);
+    }
+  }, []);
 
   const handleMouseMove = (event) => {
     const canvas = event.target;
@@ -68,17 +77,7 @@ const ColorWheel = () => {
 
   return (
     <VStack spacing={4}>
-      <canvas
-        width="300"
-        height="300"
-        onMouseMove={handleMouseMove}
-        ref={(canvas) => {
-          if (canvas) {
-            const ctx = canvas.getContext("2d");
-            drawColorWheel(canvas, ctx, 150);
-          }
-        }}
-      />
+      <canvas width="300" height="300" onMouseMove={handleMouseMove} ref={canvasRef} />
       <Circle size="50px" bg={selectedColor} />
       <Text>{selectedColor}</Text>
     </VStack>
